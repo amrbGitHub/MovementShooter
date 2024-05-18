@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
@@ -18,7 +19,15 @@ public class SC_FPSController : MonoBehaviour
     Vector3 moveDirection = Vector3.zero;
     float rotationX = 0;
     float rotationY = 0;    
-    private float  velocity = 0f;
+    private Vector3  velocity = Vector3.zero;
+    [SerializeField] private float slideSpeed = 10f;
+    bool isSliding;
+    bool isCrouching = false;   
+    float originalHeight;
+    [SerializeField] float reducedHeight;
+    private float slideTimer;
+    [SerializeField] private float slideDuration = 2f;
+    
 
     [HideInInspector]
     public bool canMove = true;
@@ -27,11 +36,16 @@ public class SC_FPSController : MonoBehaviour
     {
         characterController = GetComponent<CharacterController>();
 
+        originalHeight = characterController.height;
+        Debug.Log(originalHeight);
         // Lock cursor
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
+    private void Awake()
+    {
+    }
     void Update()
     {
         // We are grounded, so recalculate move direction based on axes
@@ -53,6 +67,21 @@ public class SC_FPSController : MonoBehaviour
             moveDirection.y = movementDirectionY;
         }
 
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !isSliding)
+        {
+            isSliding = true;
+            Sliding();
+
+        }
+        else
+        {
+            isSliding = false;
+            characterController.height = originalHeight;
+        }
+
+
+       
+
         // Apply gravity. Gravity is multiplied by deltaTime twice (once here, and once below
         // when the moveDirection is multiplied by deltaTime). This is because gravity should be applied
         // as an acceleration (ms^-2)
@@ -61,7 +90,7 @@ public class SC_FPSController : MonoBehaviour
             moveDirection.y -= gravity * Time.deltaTime;
         }
 
-       characterController.Move(velocity * Time.deltaTime);
+      // characterController.Move(velocity * Time.deltaTime);
         // Move the controller
         characterController.Move(moveDirection * Time.deltaTime);
 
@@ -77,4 +106,26 @@ public class SC_FPSController : MonoBehaviour
 
         
     }
+
+    private void Sliding()
+    {
+        if (isSliding)
+        {
+
+            slideTimer = slideDuration;
+
+            slideTimer -= Time.deltaTime;
+
+            if (slideTimer <= 0)
+            {
+                isSliding = false;
+            }
+
+            characterController.Move(moveDirection * slideSpeed * Time.deltaTime);
+        }
+    }
+
+   
+
+   
 }
