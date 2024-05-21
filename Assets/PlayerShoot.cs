@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class PlayerShoot : MonoBehaviour
 {
-    private Camera fpscam;
+    [SerializeField] private Camera fpscam;
     // Start is called before the first frame update
     void Start()
     {
-       fpscam = GetComponentInChildren<Camera>();
+      
     }
 
     // Update is called once per frame
