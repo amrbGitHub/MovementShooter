@@ -7,13 +7,14 @@ public class MoveCam : MonoBehaviour
     [SerializeField] private Transform cam;
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         transform.position = cam.position;
         transform.rotation = cam.rotation;
     }
+    
 }
