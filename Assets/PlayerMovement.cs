@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement")]
-    [SerializeField] private float moveSpeed;
+    private float moveSpeed;
+    [SerializeField] private float walkSpeed;
+    [SerializeField] private float sprintSpeed;
 
     [SerializeField] private float groundDrag;
     [SerializeField] private float jumpForce;
@@ -20,22 +23,40 @@ public class PlayerMovement : MonoBehaviour
     private bool grounded;
 
 
+    [Header("Crouching")]
+    [SerializeField] private float crouchSpeed;
+    [SerializeField] private float crouchYScale;
+    [SerializeField] private float startYScale;
+
     [Header("Keybinds")]
     [SerializeField] private KeyCode jumpKey = KeyCode.Space;
+    [SerializeField] private KeyCode sprintKey = KeyCode.LeftShift;
+    [SerializeField] private KeyCode crouchKey  = KeyCode.LeftAlt;
 
     [SerializeField] private Transform orientation;
 
     private float horizontalInput;
     private float verticalInput;
 
+    MovementState state;
     Vector3 moveDirection; 
     Rigidbody rb;
+    [SerializeField] private enum MovementState
+    {
+        walking,
+        sprinting,
+        crouching,
+        air
+    }
+
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         canJump = true;
+
+        startYScale = transform.localScale.y;
     }
 
     private void Update()
@@ -55,6 +76,9 @@ public class PlayerMovement : MonoBehaviour
         }
 
         SpeedControl();
+        StateHandler();
+
+     
     }
 
     private void FixedUpdate()
@@ -72,8 +96,46 @@ public class PlayerMovement : MonoBehaviour
             Jump();
             Invoke(nameof(ResetJump), jumpCoolDown);
         }
+
+        if (Input.GetKeyDown(crouchKey))
+        {
+
+            transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
+            rb.AddForce(Vector3.down, ForceMode.Impulse);
+            
+        }
+
+        if (Input.GetKeyUp(crouchKey))
+        {
+            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
+        }
     }
 
+    private void StateHandler()
+    {
+        if (Input.GetKey(crouchKey))
+        {
+            state = MovementState.crouching;
+            moveSpeed = crouchSpeed;
+        }
+
+        // mode - sprinting 
+        if (grounded && Input.GetKey(sprintKey))
+        {
+            state = MovementState.sprinting;
+            moveSpeed = sprintSpeed;
+        }
+        else if (grounded)
+        {
+            state = MovementState.walking;
+            moveSpeed = walkSpeed;
+        }
+        else
+        {
+            state = MovementState.air;
+        }
+
+    }
     private void MovePlayer()
     {
         // Calculate movement direction
@@ -101,9 +163,16 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.y);
 
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+
     }
     private void ResetJump()
     {
         canJump = true;
     }
+
+ 
+
+
+    
+
 }
