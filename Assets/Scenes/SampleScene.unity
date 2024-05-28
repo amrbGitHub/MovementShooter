@@ -715,7 +715,7 @@ Transform:
   m_GameObject: {fileID: 1145261155}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.01, z: 0}
+  m_LocalPosition: {x: 0, y: 1.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -791,7 +791,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.3
   m_Height: 2
@@ -817,11 +817,16 @@ MonoBehaviour:
     ViewYSens: 25
     ViewXInverted: 0
     ViewYInverted: 1
-    walkingForwardSpeed: 0
-    walkingStrafeSpeed: 0
+    walkingForwardSpeed: 5
+    walkingStrafeSpeed: 5
     walkingBackwardsSpeed: 0
+    jumpingHeight: 10
+    jumpingFallOff: 0.1
   viewClampYMin: -70
   viewClampYMax: 80
+  gravityAmount: 0.1
+  gravityMin: -3
+  jumpingForce: {x: 0, y: 0, z: 0}
 --- !u!143 &1145261162
 CharacterController:
   m_ObjectHideFlags: 0

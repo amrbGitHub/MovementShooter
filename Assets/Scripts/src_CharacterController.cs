@@ -20,6 +20,17 @@ public class src_CharacterController : MonoBehaviour
     public PlayerSettingsModel playerSettings;
     public float viewClampYMin = -70f;
     public float viewClampYMax = 80f;
+
+
+    [Header("Gravity")]
+
+    public float gravityAmount;
+    public float gravityMin;
+    private float playerGravity;
+
+    public Vector3 jumpingForce;
+    private Vector3 jumpingForceVelocity;
+
     private void Awake()
     {
         // Create an instance of input 
@@ -29,6 +40,8 @@ public class src_CharacterController : MonoBehaviour
         defaultInput.Character.Movement.performed += e => inputMovement = e.ReadValue<Vector2>();
         // check if any Mouse movement has been performed, create reference to event into a Vector2 and read it as a Vector2
         defaultInput.Character.View.performed += e => inputView = e.ReadValue<Vector2>();
+        // Check if jump button has been performed, call Jump method
+        defaultInput.Character.Jump.performed += e => Jump();
 
         // Need this to make Input system work
         defaultInput.Enable();
@@ -45,6 +58,8 @@ public class src_CharacterController : MonoBehaviour
     {
         CalculateView();
         CalculateMovement();
+        CalculateJump();
+       
     }
 
     private void CalculateView()
@@ -70,8 +85,45 @@ public class src_CharacterController : MonoBehaviour
         var newMovementSpeed = new Vector3(horizontalSpeed, 0, vertialSpeed);
         // Makes sure that this is relative to the player's rotation
         newMovementSpeed = transform.TransformDirection(newMovementSpeed);
+
+
+        if (playerGravity > gravityMin)
+        {
+            playerGravity -= gravityAmount * Time.deltaTime;
+        }
+
+
+        if (playerGravity < -1 && characterController.isGrounded)
+        {
+            playerGravity = -1;
+        }
+
+        if (jumpingForce.y > 0.1f)
+        {
+            playerGravity = 0;
+        }
+
+        newMovementSpeed.y += playerGravity;
+
+        newMovementSpeed += jumpingForce * Time.deltaTime;
+
         // Moves player
         characterController.Move(newMovementSpeed);
 
+    }
+
+    private void CalculateJump()
+    {
+        jumpingForce = Vector3.SmoothDamp(jumpingForce, Vector3.zero, ref jumpingForceVelocity, playerSettings.jumpingFallOff);
+    }
+
+    private void Jump()
+    {
+       if (!characterController.isGrounded)
+        {
+            return;
+        }
+        // Jump 
+        jumpingForce = Vector3.up * playerSettings.jumpingHeight;
     }
 }
