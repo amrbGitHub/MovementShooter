@@ -5,11 +5,13 @@ using static Models;
 
 public class src_CharacterController : MonoBehaviour
 {
+    private CharacterController characterController;
     private DefaultInput defaultInput;
     public Vector2 inputMovement;
     public Vector2 inputView;
 
-    private Vector2 newCameraRotation;
+    private Vector3 newCameraRotation;
+    private Vector3 newCharacterRotation;
 
     [Header("References")]
     public Transform cameraHolder;
@@ -32,6 +34,11 @@ public class src_CharacterController : MonoBehaviour
         defaultInput.Enable();
 
         newCameraRotation = cameraHolder.localRotation.eulerAngles;
+        newCharacterRotation = transform.localRotation.eulerAngles;
+
+        Cursor.lockState = CursorLockMode.Confined;
+
+        characterController = GetComponent<CharacterController>();
     }
 
     private void Update()
@@ -42,17 +49,29 @@ public class src_CharacterController : MonoBehaviour
 
     private void CalculateView()
     {
-
-        newCameraRotation.x += playerSettings.ViewYSens * inputView.y * Time.deltaTime;
-
+        //Rotate around Y axis
+        newCharacterRotation.y += playerSettings.ViewXSens * inputView.x * Time.deltaTime;
+        transform.rotation = Quaternion.Euler(newCharacterRotation); // returns rotation
+        // Rotate around X axis
+        newCameraRotation.x += playerSettings.ViewYSens * (playerSettings.ViewYInverted ? -inputView.y : inputView.y) * Time.deltaTime;
         newCameraRotation.x = Mathf.Clamp(newCameraRotation.x, viewClampYMin, viewClampYMax);
 
         // We move the camera around the y and x axis 
-        cameraHolder.localRotation = Quaternion.Euler(newCameraRotation);
+        cameraHolder.localRotation = Quaternion.Euler(newCameraRotation); 
     }
 
     private void CalculateMovement()
     {
+        // Calculate speed 
+        var vertialSpeed = playerSettings.walkingForwardSpeed * inputMovement.y * Time.deltaTime;
+        var horizontalSpeed = playerSettings.walkingStrafeSpeed * inputMovement.x * Time.deltaTime;
+
+        // set speeds in a new Vector3
+        var newMovementSpeed = new Vector3(horizontalSpeed, 0, vertialSpeed);
+        // Makes sure that this is relative to the player's rotation
+        newMovementSpeed = transform.TransformDirection(newMovementSpeed);
+        // Moves player
+        characterController.Move(newMovementSpeed);
 
     }
 }

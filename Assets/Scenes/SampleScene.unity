@@ -813,10 +813,13 @@ MonoBehaviour:
   inputView: {x: 0, y: 0}
   cameraHolder: {fileID: 1226764654}
   playerSettings:
-    ViewXSens: 10
-    ViewYSens: 10
+    ViewXSens: 25
+    ViewYSens: 25
     ViewXInverted: 0
-    ViewYInverted: 0
+    ViewYInverted: 1
+    walkingForwardSpeed: 0
+    walkingStrafeSpeed: 0
+    walkingBackwardsSpeed: 0
   viewClampYMin: -70
   viewClampYMax: 80
 --- !u!143 &1145261162
