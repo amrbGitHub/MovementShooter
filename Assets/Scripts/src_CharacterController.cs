@@ -31,6 +31,16 @@ public class src_CharacterController : MonoBehaviour
     public Vector3 jumpingForce;
     private Vector3 jumpingForceVelocity;
 
+    [Header("Stance")]
+    public PlayerStance playerStance;
+    public float playerStanceSmoothing;
+    public float cameraStandingHeight;
+    public float cameraCrouchHeight;
+    public float cameraProneHeight;
+
+    private float cameraHeight;
+    private float cameraHeightVelocity; // for smooth damping
+
     private void Awake()
     {
         // Create an instance of input 
@@ -52,6 +62,8 @@ public class src_CharacterController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;
 
         characterController = GetComponent<CharacterController>();
+
+        cameraHeight = cameraHolder.localPosition.y;
     }
 
     private void Update()
@@ -59,6 +71,7 @@ public class src_CharacterController : MonoBehaviour
         CalculateView();
         CalculateMovement();
         CalculateJump();
+        CalculateCameraHeight();
        
     }
 
@@ -93,15 +106,11 @@ public class src_CharacterController : MonoBehaviour
         }
 
 
-        if (playerGravity < -1 && characterController.isGrounded)
+        if (playerGravity < -0.1 && characterController.isGrounded)
         {
-            playerGravity = -1;
+            playerGravity = -0.1f;
         }
 
-        if (jumpingForce.y > 0.1f)
-        {
-            playerGravity = 0;
-        }
 
         newMovementSpeed.y += playerGravity;
 
@@ -117,6 +126,24 @@ public class src_CharacterController : MonoBehaviour
         jumpingForce = Vector3.SmoothDamp(jumpingForce, Vector3.zero, ref jumpingForceVelocity, playerSettings.jumpingFallOff);
     }
 
+    private void CalculateCameraHeight()
+    {
+        var stanceHeight = cameraStandingHeight;
+
+        if (playerStance == PlayerStance.Crouch)
+        {
+            stanceHeight = cameraCrouchHeight;
+        }
+        else if (playerStance == PlayerStance.Prone) 
+        {
+            stanceHeight = cameraProneHeight;
+        }
+
+        cameraHeight = Mathf.SmoothDamp(cameraHolder.localPosition.y, stanceHeight, ref cameraHeightVelocity, playerStanceSmoothing);
+
+        cameraHolder.localPosition = new Vector3(cameraHolder.localPosition.x, cameraHeight, cameraHolder.localPosition.z);
+    }
+
     private void Jump()
     {
        if (!characterController.isGrounded)
@@ -125,5 +152,8 @@ public class src_CharacterController : MonoBehaviour
         }
         // Jump 
         jumpingForce = Vector3.up * playerSettings.jumpingHeight;
+
+        playerGravity = 0;
+
     }
 }

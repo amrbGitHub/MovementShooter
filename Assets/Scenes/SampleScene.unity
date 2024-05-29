@@ -729,7 +729,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1145261155}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -791,7 +791,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.3
   m_Height: 2
@@ -820,13 +820,18 @@ MonoBehaviour:
     walkingForwardSpeed: 5
     walkingStrafeSpeed: 5
     walkingBackwardsSpeed: 0
-    jumpingHeight: 10
-    jumpingFallOff: 0.1
+    jumpingHeight: 6
+    jumpingFallOff: 1
   viewClampYMin: -70
   viewClampYMax: 80
   gravityAmount: 0.1
   gravityMin: -3
   jumpingForce: {x: 0, y: 0, z: 0}
+  playerStance: 0
+  playerStanceSmoothing: 0
+  cameraStandingHeight: 0.61
+  cameraCrouchHeight: 0.305
+  cameraProneHeight: 0.1525
 --- !u!143 &1145261162
 CharacterController:
   m_ObjectHideFlags: 0

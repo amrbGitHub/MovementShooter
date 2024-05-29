@@ -5,6 +5,13 @@ using System;
 public static class Models
 {
     #region - Player -
+
+    public enum PlayerStance
+    {
+        Stand,
+        Crouch,
+        Prone
+    }
     [Serializable]
     public class PlayerSettingsModel
     {
