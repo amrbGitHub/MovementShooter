@@ -698,9 +698,9 @@ GameObject:
   - component: {fileID: 1145261158}
   - component: {fileID: 1145261160}
   - component: {fileID: 1145261163}
+  - component: {fileID: 1145261164}
   - component: {fileID: 1145261162}
   - component: {fileID: 1145261161}
-  - component: {fileID: 1145261164}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -836,13 +836,13 @@ MonoBehaviour:
   cameraProneHeight: -0.8
   playerStandStance:
     cameraHeight: 0.61
-    stanceCollider: {fileID: 0}
+    stanceCollider: {fileID: 1145261160}
   playerCrouchStance:
     cameraHeight: 0.024
-    stanceCollider: {fileID: 0}
+    stanceCollider: {fileID: 1145261163}
   playerProneStance:
     cameraHeight: -0.5
-    stanceCollider: {fileID: 0}
+    stanceCollider: {fileID: 1145261164}
 --- !u!143 &1145261162
 CharacterController:
   m_ObjectHideFlags: 0
@@ -909,7 +909,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.3
   m_Height: 0.8
