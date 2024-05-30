@@ -7,8 +7,8 @@ public class src_CharacterController : MonoBehaviour
 {
     private CharacterController characterController;
     private DefaultInput defaultInput;
-    public Vector2 inputMovement;
-    public Vector2 inputView;
+    private Vector2 inputMovement;
+    private Vector2 inputView;
 
     private Vector3 newCameraRotation;
     private Vector3 newCharacterRotation;
@@ -46,10 +46,8 @@ public class src_CharacterController : MonoBehaviour
     private float cameraHeightVelocity; // for smooth damping
 
     // Player Stance smoothing
-    private Vector3 stanceCapsuleCenter;
     private Vector3 stanceCapsuleCenterVelocity;
 
-    private float stanceCapsuleHeight;
     private float stanceCapsuleHeightVelocity;
 
     private void Awake()
@@ -63,6 +61,10 @@ public class src_CharacterController : MonoBehaviour
         defaultInput.Character.View.performed += e => inputView = e.ReadValue<Vector2>();
         // Check if jump button has been performed, call Jump method
         defaultInput.Character.Jump.performed += e => Jump();
+        // Check if Crouch button has been performed, call Crouch method
+        defaultInput.Character.Crouch.performed += e => Crouch();
+        // Check if Prone button has been performed, call Prone method
+        defaultInput.Character.Prone.performed += e => Prone();
 
         // Need this to make Input system work
         defaultInput.Enable();
@@ -71,6 +73,7 @@ public class src_CharacterController : MonoBehaviour
         newCharacterRotation = transform.localRotation.eulerAngles;
 
         Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = false;
 
         characterController = GetComponent<CharacterController>();
 
@@ -126,9 +129,12 @@ public class src_CharacterController : MonoBehaviour
         newMovementSpeed.y += playerGravity;
 
         newMovementSpeed += jumpingForce * Time.deltaTime;
+       
 
         // Moves player
         characterController.Move(newMovementSpeed);
+
+      
 
     }
 
@@ -167,6 +173,29 @@ public class src_CharacterController : MonoBehaviour
         jumpingForce = Vector3.up * playerSettings.jumpingHeight;
 
         playerGravity = 0;
+
+    }
+
+    private void Crouch()
+    {
+        if (playerStance == PlayerStance.Crouch)
+        {
+            playerStance = PlayerStance.Stand;
+            return;
+        }
+        playerStance = PlayerStance.Crouch;
+
+
+    }
+
+    private void Prone()
+    {
+        if (playerStance == PlayerStance.Prone)
+        {
+            playerStance = PlayerStance.Stand;
+            return;
+        }
+        playerStance = PlayerStance.Prone;
 
     }
 }

@@ -811,8 +811,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4d5b9f05a96f5f4493feeebeb2b5756, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputMovement: {x: 0, y: 0}
-  inputView: {x: 0, y: 0}
   cameraHolder: {fileID: 1226764654}
   playerSettings:
     ViewXSens: 25
@@ -826,11 +824,11 @@ MonoBehaviour:
     jumpingFallOff: 1
   viewClampYMin: -70
   viewClampYMax: 80
-  gravityAmount: 0.1
+  gravityAmount: 0.2
   gravityMin: -3
   jumpingForce: {x: 0, y: 0, z: 0}
   playerStance: 0
-  playerStanceSmoothing: 0.6
+  playerStanceSmoothing: 0.2
   cameraStandingHeight: 0.61
   cameraCrouchHeight: 0.024
   cameraProneHeight: -0.8
