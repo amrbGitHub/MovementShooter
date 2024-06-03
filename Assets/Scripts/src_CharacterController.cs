@@ -170,14 +170,15 @@ public class src_CharacterController : MonoBehaviour
 
     private void Jump()
     {
-       if (!characterController.isGrounded)
+       if (characterController.isGrounded)
         {
-            return;
-        }
-        // Jump 
-        jumpingForce = Vector3.up * playerSettings.jumpingHeight;
+            // Jump
+            jumpingForce = Vector3.up * playerSettings.jumpingHeight;
 
-        playerGravity = 0;
+            playerGravity = 0;
+
+        }
+        
 
     }
 
