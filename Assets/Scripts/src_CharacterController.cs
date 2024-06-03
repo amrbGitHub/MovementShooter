@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Models;
 
@@ -15,11 +16,14 @@ public class src_CharacterController : MonoBehaviour
 
     [Header("References")]
     public Transform cameraHolder;
+    public Transform feetTransform;
 
     [Header("Settings")]
     public PlayerSettingsModel playerSettings;
     public float viewClampYMin = -70f;
     public float viewClampYMax = 80f;
+    public LayerMask playerMask;
+
 
 
     [Header("Gravity")]
@@ -40,6 +44,7 @@ public class src_CharacterController : MonoBehaviour
     public CharacterStance playerStandStance;
     public CharacterStance playerCrouchStance;
     public CharacterStance playerProneStance;
+    private float stanceCheckErrorMargin = 0.05f ;
 
 
     private float cameraHeight;
@@ -47,8 +52,8 @@ public class src_CharacterController : MonoBehaviour
 
     // Player Stance smoothing
     private Vector3 stanceCapsuleCenterVelocity;
-
     private float stanceCapsuleHeightVelocity;
+
 
     private void Awake()
     {
@@ -180,7 +185,17 @@ public class src_CharacterController : MonoBehaviour
     {
         if (playerStance == PlayerStance.Crouch)
         {
+            if (StanceCheck(playerStandStance.stanceCollider.height))
+            {
+                return;
+            }
+
             playerStance = PlayerStance.Stand;
+            return;
+        }
+
+        if (StanceCheck(playerCrouchStance.stanceCollider.height))
+        {
             return;
         }
         playerStance = PlayerStance.Crouch;
@@ -192,10 +207,26 @@ public class src_CharacterController : MonoBehaviour
     {
         if (playerStance == PlayerStance.Prone)
         {
+
+            if (StanceCheck(playerStandStance.stanceCollider.height))
+            {
+                return;
+            }
+
             playerStance = PlayerStance.Stand;
             return;
         }
         playerStance = PlayerStance.Prone;
 
+    }
+
+    private bool StanceCheck(float stanceCheckHeight)
+    {
+        var start = new Vector3(feetTransform.position.x, feetTransform.position.y + characterController.radius + stanceCheckErrorMargin, feetTransform.position.z);
+        var end = new Vector3(feetTransform.position.x, feetTransform.position.y - characterController.radius - stanceCheckErrorMargin + stanceCheckHeight, feetTransform.position.z);
+
+
+
+        return Physics.CheckCapsule(start, end, characterController.radius, playerMask);
     }
 }
