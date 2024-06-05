@@ -860,7 +860,7 @@ MonoBehaviour:
   playerMask:
     serializedVersion: 2
     m_Bits: 183
-  gravityAmount: 0.2
+  gravityAmount: 0.1
   gravityMin: -3
   jumpingForce: {x: 0, y: 0, z: 0}
   playerStance: 2

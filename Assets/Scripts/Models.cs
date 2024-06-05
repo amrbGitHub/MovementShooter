@@ -22,7 +22,11 @@ public static class Models
         public bool ViewXInverted;
         public bool ViewYInverted;
 
-        [Header("Movement")]
+        [Header("Movement - Running")]
+        public float runningForwardSpeed;
+        public float runningStrafeSpeed;
+
+        [Header("Movement - Walking")]
         public float walkingForwardSpeed;
         public float walkingStrafeSpeed;
         public float walkingBackwardsSpeed;
