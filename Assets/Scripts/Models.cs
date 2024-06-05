@@ -22,6 +22,10 @@ public static class Models
         public bool ViewXInverted;
         public bool ViewYInverted;
 
+        [Header("Movement Settings")]
+        public bool sprintingHold;
+        public float MovementSmoothing;
+
         [Header("Movement - Running")]
         public float runningForwardSpeed;
         public float runningStrafeSpeed;
