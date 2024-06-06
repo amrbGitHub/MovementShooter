@@ -748,7 +748,7 @@ Transform:
   m_GameObject: {fileID: 1145261155}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.366, z: 0}
+  m_LocalPosition: {x: 0, y: 2.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -852,13 +852,18 @@ MonoBehaviour:
     ViewYInverted: 1
     sprintingHold: 1
     MovementSmoothing: 0.2
-    runningForwardSpeed: 8
-    runningStrafeSpeed: 4
+    runningForwardSpeed: 10
+    runningStrafeSpeed: 8
     walkingForwardSpeed: 5
     walkingStrafeSpeed: 5
     walkingBackwardsSpeed: 0
     jumpingHeight: 6
-    jumpingFallOff: 1
+    jumpingFallOff: 0.5
+    fallingSmoothing: 0.4
+    speedEffector: 1
+    crouchSpeedEffector: 0.6
+    proneSpeedEffector: 0.2
+    fallingSpeedEffector: 1
   viewClampYMin: -70
   viewClampYMax: 80
   playerMask:

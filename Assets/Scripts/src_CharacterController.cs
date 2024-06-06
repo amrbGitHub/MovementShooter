@@ -96,10 +96,14 @@ public class src_CharacterController : MonoBehaviour
     private void Update()
     {
         CalculateView();
-        CalculateMovement();
-        CalculateJump();
         CalculateStance();
        
+    }
+
+    private void FixedUpdate()
+    {
+        CalculateMovement();
+        CalculateJump();
     }
 
     private void CalculateView()
@@ -118,7 +122,7 @@ public class src_CharacterController : MonoBehaviour
     private void CalculateMovement()
     {
 
-        if (inputMovement.y <= 0.2f)
+        if (inputMovement.y <= 0.1f)
         {
             isSprinting = false;
         }
@@ -131,8 +135,29 @@ public class src_CharacterController : MonoBehaviour
             horizontalSpeed = playerSettings.runningStrafeSpeed;
         }
 
+        // Effectors
+
+        if (characterController.isGrounded)
+        {
+            playerSettings.speedEffector = 1;
+        }
+        else if (playerStance == PlayerStance.Crouch)
+        {
+            playerSettings.speedEffector = playerSettings.crouchSpeedEffector;
+        }
+        else if (playerStance == PlayerStance.Prone)
+        {
+            playerSettings.speedEffector = playerSettings.proneSpeedEffector;
+        }
+      
+
+
+
+        verticalSpeed *= playerSettings.speedEffector;
+        horizontalSpeed *= playerSettings.speedEffector;
+
         // set speeds in a new Vector3, using smooth damp to get smoother movement
-        newMovementSpeed = Vector3.SmoothDamp(newMovementSpeed, new Vector3(horizontalSpeed * inputMovement.x * Time.deltaTime, 0, verticalSpeed * inputMovement.y * Time.deltaTime), ref newMovementSpeedVelocity, playerSettings.MovementSmoothing);
+        newMovementSpeed = Vector3.SmoothDamp(newMovementSpeed, new Vector3(horizontalSpeed * inputMovement.x * Time.deltaTime, 0, verticalSpeed * inputMovement.y * Time.deltaTime), ref newMovementSpeedVelocity, characterController.isGrounded ? playerSettings.MovementSmoothing : playerSettings.fallingSmoothing);
         // Makes sure that this is relative to the player's rotation
        var movementSpeed = transform.TransformDirection(newMovementSpeed);
 
@@ -196,6 +221,13 @@ public class src_CharacterController : MonoBehaviour
 
        if (playerStance == PlayerStance.Crouch)
        {
+
+            if (StanceCheck(playerStandStance.stanceCollider.height))
+            {
+                return;
+            }
+
+
             playerStance = PlayerStance.Stand;
             return;
        }
@@ -260,11 +292,12 @@ public class src_CharacterController : MonoBehaviour
 
     private void ToggleSprint()
     {
-        if (inputMovement.y <= 0.2f)
+        if (inputMovement.y <= 0.1f)
         {
             isSprinting = false;
             return;
         }
+        Debug.Log("SPRINTING");
         isSprinting = !isSprinting;
     }
     private void StopSprint()
@@ -273,6 +306,8 @@ public class src_CharacterController : MonoBehaviour
         {
             isSprinting = false;
         }
-     
+        Debug.Log("NOT SPRTINTING");
+
+
     }
 }
