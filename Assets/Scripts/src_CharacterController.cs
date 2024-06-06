@@ -9,7 +9,8 @@ public class src_CharacterController : MonoBehaviour
     private CharacterController characterController;
     private DefaultInput defaultInput;
     private Vector2 inputMovement;
-    private Vector2 inputView;
+    [HideInInspector]
+    public Vector2 inputView;
 
     private Vector3 newCameraRotation;
     private Vector3 newCharacterRotation;
@@ -59,6 +60,9 @@ public class src_CharacterController : MonoBehaviour
     private Vector3 newMovementSpeed;
     private Vector3 newMovementSpeedVelocity;
 
+    [Header("Weapon")]
+    public WeaponController currentWeapon;
+
     private void Awake()
     {
         // Create an instance of input 
@@ -91,6 +95,11 @@ public class src_CharacterController : MonoBehaviour
         characterController = GetComponent<CharacterController>();
 
         cameraHeight = cameraHolder.localPosition.y;
+
+        if (currentWeapon)
+        {
+            currentWeapon.Initialize(this);
+        }
     }
 
     private void Update()
@@ -109,7 +118,7 @@ public class src_CharacterController : MonoBehaviour
     private void CalculateView()
     {
         //Rotate around Y axis
-        newCharacterRotation.y += playerSettings.ViewXSens * inputView.x * Time.deltaTime;
+        newCharacterRotation.y += playerSettings.ViewXSens * (playerSettings.ViewXInverted ? -inputView.x : inputView.x) * Time.deltaTime;
         transform.rotation = Quaternion.Euler(newCharacterRotation); // returns rotation
         // Rotate around X axis
         newCameraRotation.x += playerSettings.ViewYSens * (playerSettings.ViewYInverted ? -inputView.y : inputView.y) * Time.deltaTime;
