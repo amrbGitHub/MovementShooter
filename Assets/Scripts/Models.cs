@@ -10,7 +10,8 @@ public static class Models
     {
         Stand,
         Crouch,
-        Prone
+        Prone,
+        Sliding
     }
     [Serializable]
     public class PlayerSettingsModel
@@ -46,6 +47,13 @@ public static class Models
         public float crouchSpeedEffector;
         public float proneSpeedEffector;
         public float fallingSpeedEffector;
+        public float slidingSpeedEffector;
+
+        [Header("Movement - Sliding")]
+        public float slideStamina;
+        public float slideDistance;
+        public float slideSmoothing;
+        
     }
 
     [Serializable]

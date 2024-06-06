@@ -56,6 +56,10 @@ public class src_CharacterController : MonoBehaviour
     private float stanceCapsuleHeightVelocity;
 
     private bool isSprinting;
+    private bool isSliding;
+   
+
+    [SerializeField] private float slideDuration;
 
     private Vector3 newMovementSpeed;
     private Vector3 newMovementSpeedVelocity;
@@ -106,7 +110,9 @@ public class src_CharacterController : MonoBehaviour
     {
         CalculateView();
         CalculateStance();
-       
+        Slide();
+
+
     }
 
     private void FixedUpdate()
@@ -144,10 +150,13 @@ public class src_CharacterController : MonoBehaviour
             horizontalSpeed = playerSettings.runningStrafeSpeed;
         }
 
+        
+
         // Effectors
 
         if (playerStance == PlayerStance.Crouch)
         {
+          
             playerSettings.speedEffector = playerSettings.crouchSpeedEffector;
         }
         else if (playerStance == PlayerStance.Prone)
@@ -200,6 +209,8 @@ public class src_CharacterController : MonoBehaviour
         jumpingForce = Vector3.SmoothDamp(jumpingForce, Vector3.zero, ref jumpingForceVelocity, playerSettings.jumpingFallOff);
     }
 
+  
+
     private void CalculateStance()
     {
         var currentStance = playerStandStance;
@@ -248,6 +259,37 @@ public class src_CharacterController : MonoBehaviour
 
 
 
+    }
+
+
+  
+    private void Slide()
+    {
+       if (isSprinting && playerStance == PlayerStance.Prone)
+       {
+            playerStance = PlayerStance.Sliding;
+       }
+
+       if (playerStance == PlayerStance.Sliding)
+        {
+            StartCoroutine(CalculateSlide());
+        }
+       if (!isSliding)
+        {
+            playerStance = PlayerStance.Prone;
+        }
+
+
+
+    }
+
+    private IEnumerator CalculateSlide()
+    {
+
+        isSliding = true;
+        playerSettings.speedEffector = playerSettings.slidingSpeedEffector;
+        yield return new WaitForSeconds(playerSettings.slideStamina);
+        isSliding = false;
     }
 
     private void Crouch()
