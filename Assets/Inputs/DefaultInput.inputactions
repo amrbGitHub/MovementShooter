@@ -171,7 +171,7 @@
                 },
                 {
                     "name": "",
-                    "id": "a5463a43-4dc4-43bb-ad2a-a61346aa9d7d",
+                    "id": "40b87f2a-cf8c-477a-9259-9185b2e97b04",
                     "path": "<Keyboard>/c",
                     "interactions": "Hold",
                     "processors": "",
@@ -199,6 +199,34 @@
                     "processors": "",
                     "groups": "",
                     "action": "SprintReleased",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Gun",
+            "id": "24b12f90-e971-4242-84d3-40b5cde1ddf8",
+            "actions": [
+                {
+                    "name": "Reload",
+                    "type": "Button",
+                    "id": "6646bda3-c8fd-4e43-ab8a-b0ed46b24729",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "8932fdfe-5d36-4c22-90c4-daaf8facaffa",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Reload",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

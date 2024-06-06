@@ -193,7 +193,7 @@ public partial class @DefaultInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""a5463a43-4dc4-43bb-ad2a-a61346aa9d7d"",
+                    ""id"": ""40b87f2a-cf8c-477a-9259-9185b2e97b04"",
                     ""path"": ""<Keyboard>/c"",
                     ""interactions"": ""Hold"",
                     ""processors"": """",
@@ -225,6 +225,34 @@ public partial class @DefaultInput: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Gun"",
+            ""id"": ""24b12f90-e971-4242-84d3-40b5cde1ddf8"",
+            ""actions"": [
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""6646bda3-c8fd-4e43-ab8a-b0ed46b24729"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""8932fdfe-5d36-4c22-90c4-daaf8facaffa"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -238,6 +266,9 @@ public partial class @DefaultInput: IInputActionCollection2, IDisposable
         m_Character_Prone = m_Character.FindAction("Prone", throwIfNotFound: true);
         m_Character_Sprint = m_Character.FindAction("Sprint", throwIfNotFound: true);
         m_Character_SprintReleased = m_Character.FindAction("SprintReleased", throwIfNotFound: true);
+        // Gun
+        m_Gun = asset.FindActionMap("Gun", throwIfNotFound: true);
+        m_Gun_Reload = m_Gun.FindAction("Reload", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -389,6 +420,52 @@ public partial class @DefaultInput: IInputActionCollection2, IDisposable
         }
     }
     public CharacterActions @Character => new CharacterActions(this);
+
+    // Gun
+    private readonly InputActionMap m_Gun;
+    private List<IGunActions> m_GunActionsCallbackInterfaces = new List<IGunActions>();
+    private readonly InputAction m_Gun_Reload;
+    public struct GunActions
+    {
+        private @DefaultInput m_Wrapper;
+        public GunActions(@DefaultInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Reload => m_Wrapper.m_Gun_Reload;
+        public InputActionMap Get() { return m_Wrapper.m_Gun; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(GunActions set) { return set.Get(); }
+        public void AddCallbacks(IGunActions instance)
+        {
+            if (instance == null || m_Wrapper.m_GunActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_GunActionsCallbackInterfaces.Add(instance);
+            @Reload.started += instance.OnReload;
+            @Reload.performed += instance.OnReload;
+            @Reload.canceled += instance.OnReload;
+        }
+
+        private void UnregisterCallbacks(IGunActions instance)
+        {
+            @Reload.started -= instance.OnReload;
+            @Reload.performed -= instance.OnReload;
+            @Reload.canceled -= instance.OnReload;
+        }
+
+        public void RemoveCallbacks(IGunActions instance)
+        {
+            if (m_Wrapper.m_GunActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IGunActions instance)
+        {
+            foreach (var item in m_Wrapper.m_GunActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_GunActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public GunActions @Gun => new GunActions(this);
     public interface ICharacterActions
     {
         void OnMovement(InputAction.CallbackContext context);
@@ -398,5 +475,9 @@ public partial class @DefaultInput: IInputActionCollection2, IDisposable
         void OnProne(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
         void OnSprintReleased(InputAction.CallbackContext context);
+    }
+    public interface IGunActions
+    {
+        void OnReload(InputAction.CallbackContext context);
     }
 }

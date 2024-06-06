@@ -10,6 +10,8 @@ public class WeaponController : MonoBehaviour
 
     [Header("Settings")]
     public WeaponSettingsModel settings;
+    [SerializeField] private float smooth;
+    [SerializeField] private float swayMultiplier;
 
     bool isInitialized;
     Vector3 newWeaponRotation;
@@ -31,16 +33,17 @@ public class WeaponController : MonoBehaviour
         {
             return;
         }
+        // get mouse input
+        float mouseX = Input.GetAxisRaw("Mouse X") * swayMultiplier;
+        float mouseY = Input.GetAxisRaw("Mouse Y") * swayMultiplier;
 
-        //Rotate around Y axis
-        newWeaponRotation.y += settings.swayAmount * (settings.swayXInverted ? -characterController.inputView.x : characterController.inputView.x) * Time.deltaTime;
-        // Rotate around X axis
-        newWeaponRotation.x += settings.swayAmount * (settings.swayYInverted ? -characterController.inputView.y : characterController.inputView.y) * Time.deltaTime;
+        //calculate target rotation 
+        Quaternion rotationX = Quaternion.AngleAxis(-mouseY, Vector3.right);
+        Quaternion rotationY = Quaternion.AngleAxis(mouseX, Vector3.up);
 
-        // newWeaponRotation.x = Mathf.Clamp(newWeaponRotation.x, viewClampYMin, viewClampYMax);
+        Quaternion targetRotation = rotationX * rotationY;
 
-        // We move the camera around the y and x axis 
-        transform.rotation = Quaternion.Euler(newWeaponRotation); // returns rotation
+        transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotation, smooth * Time.deltaTime);
+
     }
-
 }
