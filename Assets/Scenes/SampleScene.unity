@@ -862,7 +862,7 @@ MonoBehaviour:
     fallingSmoothing: 0.4
     speedEffector: 1
     crouchSpeedEffector: 0.6
-    proneSpeedEffector: 0.2
+    proneSpeedEffector: 0.1
     fallingSpeedEffector: 1
   viewClampYMin: -70
   viewClampYMax: 80

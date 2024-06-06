@@ -137,17 +137,17 @@ public class src_CharacterController : MonoBehaviour
 
         // Effectors
 
-        if (characterController.isGrounded)
-        {
-            playerSettings.speedEffector = 1;
-        }
-        else if (playerStance == PlayerStance.Crouch)
+        if (playerStance == PlayerStance.Crouch)
         {
             playerSettings.speedEffector = playerSettings.crouchSpeedEffector;
         }
         else if (playerStance == PlayerStance.Prone)
         {
             playerSettings.speedEffector = playerSettings.proneSpeedEffector;
+        }
+        else
+        {
+            playerSettings.speedEffector = 1;
         }
       
 
