@@ -1077,6 +1077,8 @@ MonoBehaviour:
     crouchSpeedEffector: 0.6
     proneSpeedEffector: 0.4
     fallingSpeedEffector: 1
+    slidingSpeedEffector: 2
+    slideStamina: 0.5
   viewClampYMin: -70
   viewClampYMax: 80
   playerMask:
@@ -1099,6 +1101,7 @@ MonoBehaviour:
   playerProneStance:
     cameraHeight: -0.5
     stanceCollider: {fileID: 1145261164}
+  slideDuration: 0
   currentWeapon: {fileID: 69478938}
 --- !u!143 &1145261162
 CharacterController:

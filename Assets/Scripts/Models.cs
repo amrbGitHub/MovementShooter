@@ -51,8 +51,7 @@ public static class Models
 
         [Header("Movement - Sliding")]
         public float slideStamina;
-        public float slideDistance;
-        public float slideSmoothing;
+       
         
     }
 

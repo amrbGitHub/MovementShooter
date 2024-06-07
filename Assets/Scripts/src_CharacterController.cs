@@ -85,6 +85,9 @@ public class src_CharacterController : MonoBehaviour
         // Check if Sprint button has been performed, call Sprint method
         defaultInput.Character.Sprint.performed += e => ToggleSprint();
         defaultInput.Character.SprintReleased.performed += e => StopSprint();
+        // Check if Slide button has been performed, call Slide method
+        defaultInput.Character.Slide.performed += e => Slide();
+
 
 
         // Need this to make Input system work
@@ -110,7 +113,6 @@ public class src_CharacterController : MonoBehaviour
     {
         CalculateView();
         CalculateStance();
-        Slide();
 
 
     }
@@ -150,18 +152,23 @@ public class src_CharacterController : MonoBehaviour
             horizontalSpeed = playerSettings.runningStrafeSpeed;
         }
 
-        
+
 
         // Effectors
 
         if (playerStance == PlayerStance.Crouch)
         {
-          
+
             playerSettings.speedEffector = playerSettings.crouchSpeedEffector;
         }
         else if (playerStance == PlayerStance.Prone)
         {
-            playerSettings.speedEffector = playerSettings.proneSpeedEffector;
+                playerSettings.speedEffector = playerSettings.proneSpeedEffector;
+            
+        }
+        else if (playerStance == PlayerStance.Sliding)
+        {
+            playerSettings.speedEffector = playerSettings.slidingSpeedEffector;
         }
         else
         {
@@ -223,7 +230,10 @@ public class src_CharacterController : MonoBehaviour
         {
             currentStance = playerProneStance;
         }
-
+        else if (playerStance == PlayerStance.Sliding)
+        {
+            currentStance = playerProneStance;
+        }
         cameraHeight = Mathf.SmoothDamp(cameraHolder.localPosition.y, currentStance.cameraHeight, ref cameraHeightVelocity, playerStanceSmoothing);
         cameraHolder.localPosition = new Vector3(cameraHolder.localPosition.x, cameraHeight, cameraHolder.localPosition.z);
 
@@ -265,20 +275,14 @@ public class src_CharacterController : MonoBehaviour
   
     private void Slide()
     {
-       if (isSprinting && playerStance == PlayerStance.Prone)
-       {
-            playerStance = PlayerStance.Sliding;
-       }
-
-       if (playerStance == PlayerStance.Sliding)
+       if (isSprinting)
         {
             StartCoroutine(CalculateSlide());
         }
-       if (!isSliding)
+       else
         {
-            playerStance = PlayerStance.Prone;
+            return;
         }
-
 
 
     }
@@ -286,10 +290,11 @@ public class src_CharacterController : MonoBehaviour
     private IEnumerator CalculateSlide()
     {
 
-        isSliding = true;
-        playerSettings.speedEffector = playerSettings.slidingSpeedEffector;
+        if (playerStance == PlayerStance.Prone) { playerStance = PlayerStance.Sliding; }
+        Debug.Log("CURRENTLY SLIDING");
         yield return new WaitForSeconds(playerSettings.slideStamina);
-        isSliding = false;
+        playerStance = PlayerStance.Stand;
+        Debug.Log("STOPPED SLIDING");
     }
 
     private void Crouch()
