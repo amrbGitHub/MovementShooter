@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -14,12 +15,19 @@ public class WeaponController : MonoBehaviour
     [SerializeField] private float swayMultiplier;
 
     bool isInitialized;
-    Vector3 newWeaponRotation;
-    Vector3 newWeaponVelocity;
+
+    [Header("ADS Settings")]
+    [SerializeField] private Transform normalGunPos;
+    [SerializeField] private Transform adsGunPos;
+    [SerializeField] private float adsTime;
+    private float elapsedTime;
+
 
     private void Start()
     {
-        newWeaponRotation = transform.localRotation.eulerAngles;
+        elapsedTime += Time.deltaTime;
+
+
     }
     public void Initialize(src_CharacterController CharacterController)
     {
@@ -29,6 +37,7 @@ public class WeaponController : MonoBehaviour
 
     private void Update()
     {
+        transform.position = normalGunPos.position;
         if (!isInitialized)
         {
             return;
@@ -45,5 +54,19 @@ public class WeaponController : MonoBehaviour
 
         transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotation, smooth * Time.deltaTime);
 
+        if (Input.GetMouseButton(1))
+        {
+            Aim();
+        }
+       
+
+    }
+
+    private void Aim()
+    {
+        float percentageCompelete = elapsedTime / adsTime;
+
+        transform.position = Vector3.Lerp(normalGunPos.position, adsGunPos.position, percentageCompelete);
     }
 }
+

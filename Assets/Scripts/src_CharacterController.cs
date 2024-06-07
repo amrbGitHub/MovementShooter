@@ -143,8 +143,8 @@ public class src_CharacterController : MonoBehaviour
         {
             isSprinting = false;
         }
-        var verticalSpeed = playerSettings.walkingForwardSpeed;
-        var horizontalSpeed = playerSettings.walkingStrafeSpeed;
+        float verticalSpeed = playerSettings.walkingForwardSpeed;
+        float horizontalSpeed = playerSettings.walkingStrafeSpeed;
 
         if (isSprinting)
         {
@@ -156,24 +156,25 @@ public class src_CharacterController : MonoBehaviour
 
         // Effectors
 
-        if (playerStance == PlayerStance.Crouch)
+        switch (playerStance)
         {
-
-            playerSettings.speedEffector = playerSettings.crouchSpeedEffector;
-        }
-        else if (playerStance == PlayerStance.Prone)
-        {
+            case PlayerStance.Crouch:
+                playerSettings.speedEffector = playerSettings.crouchSpeedEffector;
+                break;
+            case PlayerStance.Prone:
                 playerSettings.speedEffector = playerSettings.proneSpeedEffector;
-            
+                break;
+            case PlayerStance.Sliding:
+                playerSettings.speedEffector = playerSettings.slidingSpeedEffector;
+                break;
+            default:
+                playerSettings.speedEffector = 1;
+                break;
+
+
+
         }
-        else if (playerStance == PlayerStance.Sliding)
-        {
-            playerSettings.speedEffector = playerSettings.slidingSpeedEffector;
-        }
-        else
-        {
-            playerSettings.speedEffector = 1;
-        }
+      
       
 
 
@@ -184,7 +185,7 @@ public class src_CharacterController : MonoBehaviour
         // set speeds in a new Vector3, using smooth damp to get smoother movement
         newMovementSpeed = Vector3.SmoothDamp(newMovementSpeed, new Vector3(horizontalSpeed * inputMovement.x * Time.deltaTime, 0, verticalSpeed * inputMovement.y * Time.deltaTime), ref newMovementSpeedVelocity, characterController.isGrounded ? playerSettings.MovementSmoothing : playerSettings.fallingSmoothing);
         // Makes sure that this is relative to the player's rotation
-       var movementSpeed = transform.TransformDirection(newMovementSpeed);
+       Vector3 movementSpeed = transform.TransformDirection(newMovementSpeed);
 
 
         if (playerGravity > gravityMin)
@@ -220,7 +221,7 @@ public class src_CharacterController : MonoBehaviour
 
     private void CalculateStance()
     {
-        var currentStance = playerStandStance;
+        CharacterStance currentStance = playerStandStance;
 
         if (playerStance == PlayerStance.Crouch)
         {
@@ -276,15 +277,9 @@ public class src_CharacterController : MonoBehaviour
     private void Slide()
     {
        if (isSprinting)
-        {
+       {
             StartCoroutine(CalculateSlide());
-        }
-       else
-        {
-            return;
-        }
-
-
+       } 
     }
 
     private IEnumerator CalculateSlide()
@@ -338,8 +333,8 @@ public class src_CharacterController : MonoBehaviour
 
     private bool StanceCheck(float stanceCheckHeight)
     {
-        var start = new Vector3(feetTransform.position.x, feetTransform.position.y + characterController.radius + stanceCheckErrorMargin, feetTransform.position.z);
-        var end = new Vector3(feetTransform.position.x, feetTransform.position.y - characterController.radius - stanceCheckErrorMargin + stanceCheckHeight, feetTransform.position.z);
+        Vector3 start = new (feetTransform.position.x, feetTransform.position.y + characterController.radius + stanceCheckErrorMargin, feetTransform.position.z);
+        Vector3 end = new (feetTransform.position.x, feetTransform.position.y - characterController.radius - stanceCheckErrorMargin + stanceCheckHeight, feetTransform.position.z);
 
 
 

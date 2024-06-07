@@ -13,10 +13,17 @@ public class Gun : MonoBehaviour
     float timeSinceLastShot;
 
 
+    [Header("ADS Settings")]
+    private Transform normalGunPos;
+    [SerializeField] private Transform adsGunPos;
+    [SerializeField] private float adsTime;
+    private float elapsedTime;
+
     private void Start()
     {
         PlayerShoot.shootInput += Shoot;
         PlayerShoot.reloadInput += StartReload;
+
     }
 
     public void StartReload()
@@ -65,6 +72,19 @@ public class Gun : MonoBehaviour
     private void Update()
     {
         timeSinceLastShot += Time.deltaTime;
+        elapsedTime += Time.deltaTime;
+
+        normalGunPos.position = transform.position;
+
+        //transform.position = normalGunPos.position;
+
+       if (Input.GetMouseButtonDown(1))
+        {
+            Aim();
+        }
+
+
+
 
         Debug.DrawRay(muzzle.position, muzzle.forward, Color.green);
     }
@@ -72,5 +92,12 @@ public class Gun : MonoBehaviour
     private void OnGunShot()
     {
 
+    }
+
+    private void Aim()
+    {
+        float percentageCompelete = elapsedTime / adsTime;
+
+        transform.position = Vector3.Lerp(normalGunPos.position, adsGunPos.position, percentageCompelete);
     }
 }
