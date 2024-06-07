@@ -25,6 +25,7 @@ public class src_CharacterController : MonoBehaviour
     public float viewClampYMax = 80f;
     public LayerMask playerMask;
 
+  
 
 
     [Header("Gravity")]
@@ -56,7 +57,6 @@ public class src_CharacterController : MonoBehaviour
     private float stanceCapsuleHeightVelocity;
 
     private bool isSprinting;
-    private bool isSliding;
    
 
     [SerializeField] private float slideDuration;
@@ -114,6 +114,8 @@ public class src_CharacterController : MonoBehaviour
         CalculateView();
         CalculateStance();
 
+       
+      
 
     }
 
@@ -235,6 +237,8 @@ public class src_CharacterController : MonoBehaviour
         {
             currentStance = playerProneStance;
         }
+        
+        
         cameraHeight = Mathf.SmoothDamp(cameraHolder.localPosition.y, currentStance.cameraHeight, ref cameraHeightVelocity, playerStanceSmoothing);
         cameraHolder.localPosition = new Vector3(cameraHolder.localPosition.x, cameraHeight, cameraHolder.localPosition.z);
 
@@ -271,7 +275,6 @@ public class src_CharacterController : MonoBehaviour
 
 
     }
-
 
   
     private void Slide()
@@ -361,4 +364,8 @@ public class src_CharacterController : MonoBehaviour
 
 
     }
+
+ 
+
+   
 }
