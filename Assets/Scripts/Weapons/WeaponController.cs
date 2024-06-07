@@ -14,20 +14,19 @@ public class WeaponController : MonoBehaviour
     [SerializeField] private float smooth;
     [SerializeField] private float swayMultiplier;
 
-    bool isInitialized;
-
     [Header("ADS Settings")]
     [SerializeField] private Transform normalGunPos;
     [SerializeField] private Transform adsGunPos;
     [SerializeField] private float adsTime;
     private float elapsedTime;
 
+    bool isInitialized;
+
+
 
     private void Start()
     {
-        elapsedTime += Time.deltaTime;
-
-
+        
     }
     public void Initialize(src_CharacterController CharacterController)
     {
@@ -37,7 +36,7 @@ public class WeaponController : MonoBehaviour
 
     private void Update()
     {
-        transform.position = normalGunPos.position;
+        elapsedTime += Time.deltaTime;
         if (!isInitialized)
         {
             return;
@@ -58,7 +57,10 @@ public class WeaponController : MonoBehaviour
         {
             Aim();
         }
-       
+        else
+        {
+            transform.localPosition = normalGunPos.localPosition;
+        }
 
     }
 
@@ -66,7 +68,8 @@ public class WeaponController : MonoBehaviour
     {
         float percentageCompelete = elapsedTime / adsTime;
 
-        transform.position = Vector3.Lerp(normalGunPos.position, adsGunPos.position, percentageCompelete);
+        transform.localPosition = Vector3.Lerp(normalGunPos.localPosition, adsGunPos.localPosition, percentageCompelete);
     }
 }
+
 
