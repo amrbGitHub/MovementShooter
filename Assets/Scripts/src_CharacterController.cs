@@ -225,19 +225,25 @@ public class src_CharacterController : MonoBehaviour
     {
         CharacterStance currentStance = playerStandStance;
 
-        if (playerStance == PlayerStance.Crouch)
+        switch (playerStance)
         {
-            currentStance = playerCrouchStance;
+            case PlayerStance.Crouch:
+                currentStance = playerCrouchStance;
+                break;
+            case PlayerStance.Prone:
+                currentStance = playerProneStance;
+                break;
+            case PlayerStance.Sliding:
+                currentStance = playerProneStance;
+                break;
+            default:
+                currentStance = playerStandStance;
+                break;
+
+
         }
-        else if (playerStance == PlayerStance.Prone) 
-        {
-            currentStance = playerProneStance;
-        }
-        else if (playerStance == PlayerStance.Sliding)
-        {
-            currentStance = playerProneStance;
-        }
-        
+
+
         
         cameraHeight = Mathf.SmoothDamp(cameraHolder.localPosition.y, currentStance.cameraHeight, ref cameraHeightVelocity, playerStanceSmoothing);
         cameraHolder.localPosition = new Vector3(cameraHolder.localPosition.x, cameraHeight, cameraHolder.localPosition.z);

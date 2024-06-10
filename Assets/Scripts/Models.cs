@@ -11,7 +11,8 @@ public static class Models
         Stand,
         Crouch,
         Prone,
-        Sliding
+        Sliding,
+        Wallrunning
     }
     [Serializable]
     public class PlayerSettingsModel
@@ -51,8 +52,10 @@ public static class Models
 
         [Header("Movement - Sliding")]
         public float slideStamina;
-       
-        
+
+        [Header("Movement - Wallrunning")]
+        public float wallRunSpeed;
+        public bool wallrunning;
     }
 
     [Serializable]
