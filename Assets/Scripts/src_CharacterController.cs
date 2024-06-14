@@ -1,6 +1,6 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using static Models;
 
@@ -25,14 +25,15 @@ public class src_CharacterController : MonoBehaviour
     public float viewClampYMax = 80f;
     public LayerMask playerMask;
 
-  
 
+    Vector3 velocity;
 
     [Header("Gravity")]
 
     public float gravityAmount;
     public float gravityMin;
     private float playerGravity;
+
 
     public Vector3 jumpingForce;
     private Vector3 jumpingForceVelocity;
@@ -55,9 +56,10 @@ public class src_CharacterController : MonoBehaviour
     // Player Stance smoothing
     private Vector3 stanceCapsuleCenterVelocity;
     private float stanceCapsuleHeightVelocity;
-
+    
     private bool isSprinting;
-   
+    Action OnNextDrawGizmos;
+
 
     [SerializeField] private float slideDuration;
 
@@ -114,10 +116,15 @@ public class src_CharacterController : MonoBehaviour
         CalculateView();
         CalculateStance();
 
-       
-      
+        UpdateSlopeSliding();
+
+
+
+
 
     }
+
+  
 
     private void FixedUpdate()
     {
@@ -140,6 +147,8 @@ public class src_CharacterController : MonoBehaviour
 
     private void CalculateMovement()
     {
+
+     
 
         if (inputMovement.y <= 0.1f)
         {
@@ -282,6 +291,40 @@ public class src_CharacterController : MonoBehaviour
 
     }
 
+    private void OnDrawGizmos()
+    {
+        OnNextDrawGizmos?.Invoke();
+        OnNextDrawGizmos = null;
+    }
+
+
+    private void UpdateSlopeSliding()
+    {
+        if (characterController.isGrounded)
+        {
+            float sphereCastVerticalOffset = characterController.height / 2 - characterController.radius;
+            Vector3 castOrigin = transform.position - new Vector3(0, sphereCastVerticalOffset, 0);
+
+            if (Physics.SphereCast(castOrigin, characterController.radius - .01f, Vector3.down, out RaycastHit hit, .1f, ~LayerMask.GetMask("Player"), QueryTriggerInteraction.Ignore))
+            {
+                Collider collider = hit.collider;
+                float angle = Vector3.Angle(Vector3.up, hit.normal);
+                Debug.DrawLine(hit.point, hit.point + hit.normal, Color.black, 3f);
+
+                OnNextDrawGizmos += () =>
+                {
+                    GUI.color = Color.black;
+                    Handles.Label(transform.position + new Vector3(0, 2f, 0), "Angle:" + angle.ToString());
+                };
+
+                if (angle > characterController.slopeLimit)
+                {
+                }
+
+            }
+
+        }
+    }
   
     private void Slide()
     {
