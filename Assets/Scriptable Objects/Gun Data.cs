@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 [CreateAssetMenu(fileName = "Gun", menuName = "Weapon/Gun")]
 public class GunData : ScriptableObject
@@ -17,4 +18,10 @@ public class GunData : ScriptableObject
     public float reloadTime;
     [HideInInspector]
     public bool reloading;
+
+    
+
+ 
+
+   
 }

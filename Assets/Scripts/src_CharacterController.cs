@@ -319,6 +319,8 @@ public class src_CharacterController : MonoBehaviour
 
                 if (angle > characterController.slopeLimit)
                 {
+                   // Nothing for now
+
                 }
 
             }
@@ -326,6 +328,7 @@ public class src_CharacterController : MonoBehaviour
         }
     }
   
+ 
     private void Slide()
     {
        if (isSprinting)
@@ -338,8 +341,16 @@ public class src_CharacterController : MonoBehaviour
     {
 
         if (playerStance == PlayerStance.Prone) { playerStance = PlayerStance.Sliding; }
+        
         Debug.Log("CURRENTLY SLIDING");
-        yield return new WaitForSeconds(playerSettings.slideStamina);
+        float oldStam = playerSettings.slideStamina;
+       while (playerSettings.slideStamina > 0)
+        {
+            playerSettings.slideStamina -= Time.deltaTime * playerSettings.slideMultiplier;
+            yield return null;
+        }
+
+       playerSettings.slideStamina = oldStam;
         playerStance = PlayerStance.Stand;
         Debug.Log("STOPPED SLIDING");
     }

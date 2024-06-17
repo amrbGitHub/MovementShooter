@@ -57,6 +57,14 @@ public class Gun : MonoBehaviour
                     damageable?.Damage(gunData.damage);
 
                 }
+                GameObject bullet = ObjectPool.instance.GetPooledObject();
+
+                if (bullet != null)
+                {
+                    bullet.transform.position = muzzle.position;
+                   
+                    bullet.SetActive(true);
+                }
 
                 gunData.currentAmmo--;
                 timeSinceLastShot = 0;

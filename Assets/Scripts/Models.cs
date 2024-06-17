@@ -52,6 +52,7 @@ public static class Models
 
         [Header("Movement - Sliding")]
         public float slideStamina;
+        public float slideMultiplier;
 
         [Header("Movement - Wallrunning")]
         public float wallRunSpeed;
