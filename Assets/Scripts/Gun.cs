@@ -15,13 +15,18 @@ public class Gun : MonoBehaviour
     [SerializeField]
     private float shotDelay = 0.5f;
     [SerializeField]
-    private LayerMask playerMask;
 
+    private LayerMask playerMask;
     private float lastShootTime;
+    public static int magCount = 100;
+    public static RaycastHit hit;
+    [SerializeField] private int magDisplay; // delete this when UI is implemented.
+
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        magDisplay = magCount;
+        if (Input.GetMouseButtonDown(0) && magCount > 0)
         {
             Shoot();
         }
@@ -33,13 +38,14 @@ public class Gun : MonoBehaviour
             shootingParticleSystem.Play();
             Vector3 direction = GetDirection();
 
-            if (Physics.Raycast(bulletSpawnPoint.position, direction, out RaycastHit hit,float.MaxValue,playerMask))
+            if (Physics.Raycast(bulletSpawnPoint.position, direction, out hit,float.MaxValue,playerMask))
             {
                 TrailRenderer trail = Instantiate(bulletTrail, bulletSpawnPoint.position,Quaternion.identity);
                 StartCoroutine(SpawnTrail(trail, hit));
 
                 lastShootTime = Time.time;
             }
+            magCount--;
         }
     }
 
