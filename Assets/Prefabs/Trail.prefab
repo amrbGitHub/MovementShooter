@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 709482441558950004}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.144, y: 2.6340072, z: 3.862}
+  m_LocalPosition: {x: 3.2199483, y: 2.6340072, z: 3.862}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -108,15 +108,15 @@ TrailRenderer:
     colorGradient:
       serializedVersion: 2
       key0: {r: 1, g: 0.3706116, b: 0, a: 1}
-      key1: {r: 1, g: 1, b: 1, a: 0}
-      key2: {r: 1, g: 1, b: 1, a: 0}
+      key1: {r: 0.5754717, g: 0.36597702, b: 0.24158953, a: 1}
+      key2: {r: 0.5754717, g: 0.36597702, b: 0.24158953, a: 0}
       key3: {r: 1, g: 1, b: 1, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
       key5: {r: 0, g: 0, b: 0, a: 0}
       key6: {r: 0, g: 0, b: 0, a: 0}
       key7: {r: 0, g: 0, b: 0, a: 0}
-      ctime0: 0
-      ctime1: 23323
+      ctime0: 10023
+      ctime1: 65535
       ctime2: 65535
       ctime3: 65535
       ctime4: 0
@@ -133,7 +133,7 @@ TrailRenderer:
       atime7: 0
       m_Mode: 0
       m_ColorSpace: 0
-      m_NumColorKeys: 3
+      m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
     numCapVertices: 0

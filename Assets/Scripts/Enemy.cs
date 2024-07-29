@@ -2,26 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IDamageable
 {
-    private Animator animator;
-    private float KnockbackForce = 10f;
-    private void Awake()
+    private Health health;
+    public int damageOutput;
+    public void Damage(int damage)
     {
-        animator = GetComponent<Animator>();
+        health.hitPoints -= damage;
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            animator.enabled = false;
-            Knockback();
-        }
-    }
+    
+ 
 
-   private void Knockback()
-    {
-        transform.position = -Vector3.forward * Time.deltaTime * KnockbackForce;
-   }
 }

@@ -18,14 +18,12 @@ public class Gun : MonoBehaviour
 
     private LayerMask playerMask;
     private float lastShootTime;
-    public static int magCount = 100;
+    public int magCount = 1;
     public static RaycastHit hit;
-    [SerializeField] private int magDisplay; // delete this when UI is implemented.
 
 
     private void Update()
     {
-        magDisplay = magCount;
         if (Input.GetMouseButtonDown(0) && magCount > 0)
         {
             Shoot();
