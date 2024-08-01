@@ -19,25 +19,22 @@ public class BulletDrop : MonoBehaviour
     private float MaxHeight;
     [SerializeField]
     private float respawnTimer;
+    private BoxCollider boxCollider;
+    private MeshRenderer meshRenderer;
 
-    private bool isCollected = false;
 
+    private void Awake()
+    {
+        boxCollider = GetComponent<BoxCollider>();
+        meshRenderer = GetComponentInChildren<MeshRenderer>();
 
+    }
 
     // Update is called once per frame
     void Update()
     { 
         RotateObject();
 
-        if (isCollected)
-        {
-            gameObject.SetActive(false);
-        }
-        else if (!isCollected) 
-        {
-            gameObject.SetActive(true);
-        }
-    
     }
 
     private void OnTriggerEnter(Collider other)
@@ -46,6 +43,7 @@ public class BulletDrop : MonoBehaviour
         {
             CheckRestock(other.gameObject.GetComponentInChildren<Gun>());
             StartCoroutine(RespawnDrop());
+
         }
     }
 
@@ -56,8 +54,9 @@ public class BulletDrop : MonoBehaviour
             if (playerAmmo.magCount < replenishAmount)
             {
                 playerAmmo.magCount = replenishAmount;
+
             }
-       }
+        }
     }
 
     private void RotateObject()
@@ -69,10 +68,11 @@ public class BulletDrop : MonoBehaviour
 
     IEnumerator RespawnDrop()
     {
-        isCollected = true;
+        boxCollider.enabled = false;
+        meshRenderer.enabled = false;
         yield return new WaitForSeconds(respawnTimer);
-        isCollected = false;
-        
+        boxCollider.enabled = true;
+        meshRenderer.enabled = true;
     }
 
 

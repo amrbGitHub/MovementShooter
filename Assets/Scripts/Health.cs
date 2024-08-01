@@ -14,6 +14,7 @@ public class Health : MonoBehaviour
     private void Update()
     {
         maintainHealth();
+        UIManager.Instance.healthText.text = $"{hitPoints}";
     }
 
     private void maintainHealth()
@@ -35,5 +36,5 @@ public class Health : MonoBehaviour
     }
 
 
-
+     
 }

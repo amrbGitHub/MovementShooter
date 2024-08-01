@@ -14,10 +14,16 @@ public class HealthDrop : MonoBehaviour
     private float MinHeight;
     [SerializeField]
     private float MaxHeight;
+    [SerializeField]
+    private float respawnTimer;
+    private BoxCollider boxCollider;
+    private MeshRenderer meshRenderer;
+
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        
+        boxCollider = GetComponent<BoxCollider>();
+        meshRenderer = GetComponentInChildren<MeshRenderer>();
     }
 
     // Update is called once per frame
@@ -43,7 +49,7 @@ public class HealthDrop : MonoBehaviour
             if (playerHealth.hitPoints < playerHealth.maxHealth)
             {
                 playerHealth.hitPoints += replenishAmount;
-                Destroy(this.gameObject);
+                StartCoroutine(RespawnDrop());
             }
         }
     }
@@ -53,6 +59,16 @@ public class HealthDrop : MonoBehaviour
         transform.position = new Vector3(transform.position.x, yPos, transform.position.z);
         transform.Rotate(0, rotationSpeed * Time.deltaTime, 0);
     }
+
+    IEnumerator RespawnDrop()
+    {
+        boxCollider.enabled = false;
+        meshRenderer.enabled = false;
+        yield return new WaitForSeconds(respawnTimer);
+        boxCollider.enabled = true;
+        meshRenderer.enabled = true;
+    }
+
 }
 
 

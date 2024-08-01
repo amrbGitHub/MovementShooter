@@ -14,6 +14,8 @@ public class Gun : MonoBehaviour
     private TrailRenderer bulletTrail;
     [SerializeField]
     private float shotDelay = 0.5f;
+    [SerializeField]
+    private float missTimer = 0.5f;
 
 
     private LayerMask playerMask = 8;
@@ -34,7 +36,8 @@ public class Gun : MonoBehaviour
                 Shoot();
             gunAnimator.Play("GunRecoil");
         }
-      
+        UIManager.Instance.ammoText.text = $"{magCount}";
+
     }
     private void Shoot()
     {
@@ -52,6 +55,11 @@ public class Gun : MonoBehaviour
 
                 lastShootTime = Time.time;
             }
+            else
+            {
+                StartCoroutine(ToggleMissText());
+            }
+           
             magCount--;          
         }
 
@@ -81,7 +89,14 @@ public class Gun : MonoBehaviour
         trail.transform.position = hit.point;
         Destroy(trail.gameObject, trail.time);
     }
+    private IEnumerator ToggleMissText()
+    {
+        UIManager.Instance.missText.enabled = true;
+        yield return new WaitForSeconds(missTimer);
+        UIManager.Instance.missText.enabled = false;
 
- 
-    
+    }
+
+
+
 }
