@@ -6,12 +6,31 @@ public class Enemy : MonoBehaviour, IDamageable
 {
     private Health health;
     public int damageOutput;
-    public void Damage(int damage)
+
+    private void Start()
     {
-        health.hitPoints -= damage;
+        health = GetComponent<Health>();
     }
 
-    
- 
+    public void TakeDamage(int damage)
+    {
+       health.hitPoints -= damage;
+    }
+
+    public int GiveDamage(int damage)
+    {
+        return damage;
+    }
+    private void Die()
+    {
+        if (health.IsDead())
+        {
+            Destroy(gameObject);
+        }
+    }
+
+
+
+
 
 }

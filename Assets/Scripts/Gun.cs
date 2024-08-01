@@ -14,37 +14,47 @@ public class Gun : MonoBehaviour
     private TrailRenderer bulletTrail;
     [SerializeField]
     private float shotDelay = 0.5f;
-    [SerializeField]
 
-    private LayerMask playerMask;
+
+    private LayerMask playerMask = 8;
     private float lastShootTime;
     public int magCount = 1;
     public static RaycastHit hit;
+    private Animator gunAnimator;
 
+    private void Awake()
+    {
+        gunAnimator = GetComponent<Animator>();
+    }
 
     private void Update()
     {
         if (Input.GetMouseButtonDown(0) && magCount > 0)
         {
-            Shoot();
+                Shoot();
+            gunAnimator.Play("GunRecoil");
         }
+      
     }
     private void Shoot()
     {
         if (lastShootTime + shotDelay < Time.time)
         {
             shootingParticleSystem.Play();
+           
+            
             Vector3 direction = GetDirection();
 
-            if (Physics.Raycast(bulletSpawnPoint.position, direction, out hit,float.MaxValue,playerMask))
+            if (Physics.Raycast(bulletSpawnPoint.position, direction, out hit,float.MaxValue, ~playerMask))
             {
                 TrailRenderer trail = Instantiate(bulletTrail, bulletSpawnPoint.position,Quaternion.identity);
                 StartCoroutine(SpawnTrail(trail, hit));
 
                 lastShootTime = Time.time;
             }
-            magCount--;
+            magCount--;          
         }
+
     }
 
     private Vector3 GetDirection()
@@ -71,5 +81,7 @@ public class Gun : MonoBehaviour
         trail.transform.position = hit.point;
         Destroy(trail.gameObject, trail.time);
     }
+
+ 
     
 }
