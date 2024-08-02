@@ -23,7 +23,7 @@ public class Health : MonoBehaviour
         {
             hitPoints = maxHealth;
         }
-        else if (hitPoints < noHealth)
+        else if (hitPoints <= noHealth)
         {
             hitPoints = noHealth;
             isDead = true;

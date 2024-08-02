@@ -11,7 +11,13 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         health = GetComponent<Health>();
     }
-
+    private void Update()
+    {
+        if (health.IsDead())
+        {
+            Die();
+        }
+    }
     public void TakeDamage(int damage)
     {
        health.hitPoints -= damage;
@@ -23,10 +29,9 @@ public class Enemy : MonoBehaviour, IDamageable
     }
     private void Die()
     {
-        if (health.IsDead())
-        {
+        
             Destroy(gameObject);
-        }
+        
     }
 
 

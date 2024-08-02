@@ -44,8 +44,9 @@ public class Gun : MonoBehaviour
         if (lastShootTime + shotDelay < Time.time)
         {
             shootingParticleSystem.Play();
-           
-            
+            magCount--;
+
+
             Vector3 direction = GetDirection();
 
             if (Physics.Raycast(bulletSpawnPoint.position, direction, out hit,float.MaxValue, ~playerMask))
@@ -54,13 +55,19 @@ public class Gun : MonoBehaviour
                 StartCoroutine(SpawnTrail(trail, hit));
 
                 lastShootTime = Time.time;
+
+                if (hit.transform.GetComponent<Enemy>())
+                {
+                    Enemy enemy = hit.transform.GetComponent<Enemy>();
+                    enemy.TakeDamage(100);
+                    magCount += 1;
+                }
             }
             else
             {
                 StartCoroutine(ToggleMissText());
             }
            
-            magCount--;          
         }
 
     }
